@@ -224,8 +224,16 @@ public class IabHelper implements PurchasesUpdatedListener {
         int responseCode = billingResult.getResponseCode();
 
         if(responseCode != BillingResponseCode.OK) {
-            logError("Error response for purchases");
-            result = new IabResult(IABHELPER_BAD_RESPONSE, "Error response for purchases");
+            // Report why the purchase failed rather than collapsing everything
+            // into IABHELPER_BAD_RESPONSE, which callers can only surface as an
+            // unknown error. A cancel gets the helper's own code because that is
+            // what callers branch on; every other billing code is passed through
+            // so it stays visible in the message.
+            int failureCode = responseCode == BillingResponseCode.USER_CANCELED
+                ? IABHELPER_USER_CANCELLED
+                : responseCode;
+            logError("Error response for purchases: " + getResponseDesc(responseCode));
+            result = new IabResult(failureCode, "Error response for purchases");
             if (mPurchaseListener != null) mPurchaseListener.onIabPurchaseFinished(result, null);
             return;
         }

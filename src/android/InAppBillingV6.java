@@ -260,6 +260,10 @@ public class InAppBillingV6 extends CordovaPlugin {
             callbackContext.error(makeError("Purchase Cancelled", USER_CANCELLED, result));
           } else if (response == IabHelper.BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED) {
             callbackContext.error(makeError("Item already owned", ITEM_ALREADY_OWNED, result));
+          } else if (response == IabHelper.BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED) {
+            callbackContext.error(makeError("Item not owned", ITEM_NOT_OWNED, result));
+          } else if (response == IabHelper.BILLING_RESPONSE_RESULT_ITEM_UNAVAILABLE) {
+            callbackContext.error(makeError("Item unavailable", ITEM_UNAVAILABLE, result));
           } else {
             callbackContext.error(makeError("Error completing purchase: " + response, UNKNOWN_ERROR, result));
           }
