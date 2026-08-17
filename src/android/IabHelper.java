@@ -45,9 +45,11 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClient.BillingResponseCode;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.BillingClient.SkuType;
+import com.android.billingclient.api.BillingClient.ProductType;
+import com.android.billingclient.api.PendingPurchasesParams;
 import com.android.billingclient.api.ProductDetails;
 import com.android.billingclient.api.QueryProductDetailsParams;
+import com.android.billingclient.api.QueryProductDetailsResult;
 import com.android.billingclient.api.QueryPurchasesParams;
 import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.BillingClient;
@@ -326,7 +328,11 @@ public class IabHelper implements PurchasesUpdatedListener {
         billingClient = BillingClient
             .newBuilder(mContext)
             .setListener(this)
-            .enablePendingPurchases()
+            .enablePendingPurchases(
+                PendingPurchasesParams.newBuilder()
+                    .enableOneTimeProducts()
+                    .build())
+            .enableAutoServiceReconnection()
             .build();
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
@@ -483,8 +489,10 @@ public class IabHelper implements PurchasesUpdatedListener {
             .build();
 
         ProductDetailsResponseListener productDetailsListener = new ProductDetailsResponseListener() {
-            public void onProductDetailsResponse(BillingResult billingResult, List<ProductDetails> productDetailsList) {
-                Log.d(TAG, "onPDR: " + billingResult + " " + productDetailsList);
+            public void onProductDetailsResponse(BillingResult billingResult, QueryProductDetailsResult productDetailsResult) {
+                List<ProductDetails> productDetailsList = productDetailsResult.getProductDetailsList();
+                Log.d(TAG, "onPDR: " + billingResult + " " + productDetailsList
+                    + " unfetched: " + productDetailsResult.getUnfetchedProductList());
 
                 ArrayList<IabSkuDetails> iabSkuDetailsList = new ArrayList<IabSkuDetails>();
 
@@ -501,7 +509,9 @@ public class IabHelper implements PurchasesUpdatedListener {
                          }
                         ProductDetailsParams.Builder builder = ProductDetailsParams.newBuilder();
                         builder.setProductDetails(productDetails);
-                        if (offerToken != "") {
+                        // Billing Library 8+ throws if setOfferToken is given an empty
+                        // string, so only set it when an offer was actually found.
+                        if (!offerToken.isEmpty()) {
                            builder.setOfferToken(offerToken);
                         }
 
@@ -957,8 +967,10 @@ public class IabHelper implements PurchasesUpdatedListener {
             .build();
 
         ProductDetailsResponseListener productDetailsListener = new ProductDetailsResponseListener() {
-            public void onProductDetailsResponse(BillingResult billingResult, List<ProductDetails> productDetailsList) {
-                Log.d(TAG, "onPDR: " + billingResult + " " + productDetailsList);
+            public void onProductDetailsResponse(BillingResult billingResult, QueryProductDetailsResult productDetailsResult) {
+                List<ProductDetails> productDetailsList = productDetailsResult.getProductDetailsList();
+                Log.d(TAG, "onPDR: " + billingResult + " " + productDetailsList
+                    + " unfetched: " + productDetailsResult.getUnfetchedProductList());
 
                 ArrayList<IabSkuDetails> iabSkuDetailsList = new ArrayList<IabSkuDetails>();
 

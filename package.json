@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-inapppurchase-2",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "description": "A lightweight cordova plugin for in app purchases on iOS and Android with a simple promise based API.",
   "main": "www/index-ios.js",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/wccrawford/cordova-plugin-inapppurchase-2.git"
+    "url": "git://github.com/CrowdhubApps/cordova-plugin-inapppurchase-2.git"
   },
   "keywords": [
     "cordova",
@@ -37,7 +37,7 @@
     "email": "wccrawford@gmail.com"
   },
   "license": "MIT",
-  "homepage": "https://github.com/wccrawford/cordova-plugin-inapppurchase-2",
+  "homepage": "https://github.com/CrowdhubApps/cordova-plugin-inapppurchase-2",
   "devDependencies": {
     "@babel/core": "^7.15.8",
     "@babel/plugin-transform-async-to-generator": "^7.14.5",

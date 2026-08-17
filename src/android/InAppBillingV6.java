@@ -285,9 +285,9 @@ public class InAppBillingV6 extends CordovaPlugin {
 
     Log.d(TAG, "runPayment subscribe: " + subscribe);
     if(subscribe){
-      iabHelper.launchPurchaseFlow(cordovaActivity, sku, BillingClient.SkuType.SUBS, oipfl, developerPayload);
+      iabHelper.launchPurchaseFlow(cordovaActivity, sku, BillingClient.ProductType.SUBS, oipfl, developerPayload);
     } else {
-      iabHelper.launchPurchaseFlow(cordovaActivity, sku, BillingClient.SkuType.INAPP, oipfl, developerPayload);
+      iabHelper.launchPurchaseFlow(cordovaActivity, sku, BillingClient.ProductType.INAPP, oipfl, developerPayload);
     }
     return true;
   }
